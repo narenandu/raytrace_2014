@@ -1,6 +1,8 @@
+#include <iostream>
 #include <limits.h>
 #include <stdlib.h>
-#include <math.h>
+#include <algorithm>
+
 
 /* 
  This would be my basic Vector Class for storing color values
@@ -21,6 +23,9 @@ class Vector3
         Vector3(T x=0, T y=0,T z=0) : x(x), y(y), z(z) {}
         template <typename K>
         friend ostream& operator<< (ostream &out, const Vector3<K> &c);
+        inline T getX(){return x;}
+        inline T getY(){return y;}
+        inline T getZ(){return z;}
 };
 
 
@@ -57,16 +62,16 @@ class Color
 
 ostream& operator<< (ostream &out, const Color &c)
 {
-    return out << c.r << c.g << c.b ;
+    return out <<"["<< c.r << "," << c.g << "," << c.b <<" ]";
 }
 
 Color Vector3toColor(Vector3<float> inVector)
 {
     Color outColor(0,0,0);
     // limiting value between 0 - 1 and then scaling it in 255 (UCHAR_MAX) colors 
-    outColor.r = std::min(1.0f, std::max(0.0f, inVector.x)) * UCHAR_MAX;
-    outColor.g = std::min(1.0f, std::max(0.0f, inVector.y)) * UCHAR_MAX;
-    outColor.b = std::min(1.0f, std::max(0.0f, inVector.z)) * UCHAR_MAX;
+    outColor.r = (unsigned char)std::min(1.0f, std::max(0.0f, inVector.getX())) * UCHAR_MAX;
+    outColor.g = (unsigned char)std::min(1.0f, std::max(0.0f, inVector.getY())) * UCHAR_MAX;
+    outColor.b = (unsigned char)std::min(1.0f, std::max(0.0f, inVector.getZ())) * UCHAR_MAX;
 
     return outColor;
 }
