@@ -1,7 +1,6 @@
 #include <iostream>
-#include <limits.h>
-#include <stdlib.h>
 #include <algorithm>
+#include <limits.h>
 
 
 /* 
@@ -9,7 +8,6 @@
  or vectors. For Vectors there will be operations like dot product,
  magnitude calculation etc..
 */
-
 template <typename T>
 class Vector3
 {
@@ -21,6 +19,7 @@ class Vector3
     public:
         Vector3(T val) : x(val), y(val), z(val) {}
         Vector3(T x=0, T y=0,T z=0) : x(x), y(y), z(z) {}
+        
         template <typename K>
         friend ostream& operator<< (ostream &out, const Vector3<K> &c);
         inline T getX(){return x;}
@@ -62,7 +61,7 @@ class Color
 
 ostream& operator<< (ostream &out, const Color &c)
 {
-    return out <<"["<< c.r << "," << c.g << "," << c.b <<" ]";
+    return out << c.r << c.g << c.b;
 }
 
 Color Vector3toColor(Vector3<float> inVector)
