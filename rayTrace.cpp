@@ -1,12 +1,40 @@
 #include <fstream>
 #include <math.h>
+#include <vector>
 #include "essentials.h"
 
+
 // IMAGE SETTINGS (resolution)
-#define RES_X 160 //image width
-#define RES_Y 120 //image height
+#define RES_X 320 //image width
+#define RES_Y 240//image height
 
 #define MAX_RAY_BOUNCES 3
+
+/*
+    This function would generated the scene with given number of
+    spheres
+*/
+std::vector <Sphere>generateScene()
+{
+    std::vector <Sphere> sphSet;
+
+    Sphere s1 ( Vector3<float> (1.0, 4.0, -1.0),// center
+                3,                              // radius
+                0,                              // reflectivity
+                0);                             // transparency
+
+    sphSet.push_back(s1);
+    return sphSet;
+}
+
+/*
+    This function traverses the scene for each ray
+*/
+Vector3<float> rayTrace(Vector3<float> primRay, Sphere s)
+{
+    // code for checking intersection    
+}
+
 
 /*
     This function will take in the pixel values (x,y) on the 
@@ -35,6 +63,9 @@ int main()
     float tanFovX = tan(fovX);
     float tanFovY = tan(fovY);
 
+    // generate the scene
+    std::vector <Sphere> scene = generateScene();
+
     // Loop through each pixel from 0,0 to RES_X,RES_Y
     for (int j = 0; j < RES_Y; j++)
     {
@@ -42,7 +73,7 @@ int main()
         {
 
             Vector3<float> eyeRay;
-            //TO_DO: Write the actual tracing code which would calculate
+            Vector3<float> col;
             
             // the ray's starting point (from eye to middle of the pixel)
             // reference: www.unknownraod.com/rtfm/grahics/rt_eyerays.html
@@ -50,9 +81,13 @@ int main()
             //              center of view plane -> (0,0,-1) and parallel to XY axis
             eyeRay = calculateRay(i, j, tanFovX, tanFovY);
 
-            // the direction in to the scene. Will be creating only a single sphere
+            // Will be tracing only a single sphere
+            for (int i = 0; i < scene.size(); ++i)
+            {
+                col = rayTrace(eyeRay, scene[i]);
+            }
 
-            *img = Vector3<float> (0, 0, 255);
+            *img = Vector3<float> (0, 122, 240);
             img++;
         }
     }

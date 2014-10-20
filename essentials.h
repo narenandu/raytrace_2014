@@ -22,11 +22,19 @@ class Vector3
         
         template <typename K>
         friend ostream& operator<< (ostream &out, const Vector3<K> &c);
+        
         inline T getX(){return x;}
         inline T getY(){return y;}
         inline T getZ(){return z;}
-};
 
+        void operator=(const Vector3<T> &v)
+        {
+            x = v.x;
+            y = v.y;
+            z = v.z;
+        }
+
+};
 
 template <typename T>
 ostream& operator<< (ostream &out, const Vector3<T> &vec)
@@ -47,6 +55,7 @@ class Color
         unsigned char g;
         unsigned char b;
         
+        Color(unsigned col) : r(col), g(col), b(col) {}
         Color(unsigned char r, unsigned char g, unsigned char b) : r(r), g(g), b(b) {}
         Color* Vector3toColor(Vector3<unsigned char> inVector);
         void operator=(const Color &c)
@@ -74,3 +83,24 @@ Color Vector3toColor(Vector3<float> inVector)
     return outColor;
 }
 
+class Sphere
+{
+    public: 
+        Vector3<float> center;
+        int radius;
+        float reflectivity;
+        float transparency;
+
+        Sphere(Vector3<float>, int, float, float);
+};
+
+Sphere::Sphere( Vector3<float> cntr, 
+                int rad = 1,
+                float refl = 0.0,
+                float trns = 0.0)
+{
+    center = cntr;
+    radius = rad;
+    reflectivity = refl;
+    transparency = trns;
+}
