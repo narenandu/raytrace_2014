@@ -5,8 +5,8 @@
 
 
 // IMAGE SETTINGS (resolution)
-#define RES_X 320 //image width
-#define RES_Y 240//image height
+#define RES_X 640 //image width
+#define RES_Y 480//image height
 
 #define MAX_RAY_BOUNCES 3
 
@@ -18,10 +18,11 @@ std::vector <Sphere>generateScene()
 {
     std::vector <Sphere> sphSet;
 
-    Sphere s1 ( Vector3<float> (1.0, 4.0, -1.0),// center
-                3,                              // radius
-                0,                              // reflectivity
-                0);                             // transparency
+    Sphere s1 ( Vector3<float> (1, 4, -5),// center
+                Vector3<float> (0, 1, 1),// color
+                2,                        // radius
+                0,                        // reflectivity
+                0);                       // transparency
 
     sphSet.push_back(s1);
     return sphSet;
@@ -33,6 +34,39 @@ std::vector <Sphere>generateScene()
 Vector3<float> rayTrace(Vector3<float> primRay, Sphere s)
 {
     // code for checking intersection    
+    Vector3<float> iPoint = s.intersection(primRay);
+    Vector3<float> color(0);
+    if (iPoint.getX() < 0 && iPoint.getY() < 0 && iPoint.getZ() < 0)
+    {
+        return color;
+    }
+    else
+    {
+        Light L( Vector3<float> (0, 6, -5), // light position
+                 Vector3<float> (1, 0, 0)); // light color: red light
+
+        // light ray from intersection point to the Light
+        Vector3<float> lightRay = L.position - iPoint;
+        lightRay.normalize();
+
+        // normal at the intersection point 
+        Vector3<float> normal = iPoint - s.center;
+        normal.normalize();
+        
+        float shade = lightRay.dot(normal);
+
+        if(shade < 0 )
+        {
+            shade = 0;
+        }
+
+        float ambCoef = 0.2f;  // ambient coefficient = 20%
+        float difCoef = 0.8f;  // diffuse coefficient = 1 - ambient coeffient
+
+        color = s.color * (ambCoef + difCoef * shade);
+    }
+
+    return color;
 }
 
 
@@ -82,12 +116,13 @@ int main()
             eyeRay = calculateRay(i, j, tanFovX, tanFovY);
 
             // Will be tracing only a single sphere
-            for (int i = 0; i < scene.size(); ++i)
+            for (int obj = 0; obj < scene.size(); ++obj)
             {
-                col = rayTrace(eyeRay, scene[i]);
+                col = rayTrace(eyeRay.normalize(), scene[obj]);
             }
 
-            *img = Vector3<float> (0, 122, 240);
+            //*img = Vector3<float> (1, 1, 0);
+            *img = col;
             img++;
         }
     }
@@ -102,7 +137,7 @@ int main()
 
     for (int i = 0; i < RES_X * RES_Y; i++)
     {
-        Color color = Vector3toColor(img[i]);
+        Color color = Vec3toColor(img[i]);
         output << color;
     }
 
