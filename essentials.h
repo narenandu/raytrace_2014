@@ -46,8 +46,7 @@ class Color
         unsigned char r;
         unsigned char g;
         unsigned char b;
-
-    public:
+        
         Color(unsigned char r, unsigned char g, unsigned char b) : r(r), g(g), b(b) {}
         Color* Vector3toColor(Vector3<unsigned char> inVector);
         void operator=(const Color &c)
